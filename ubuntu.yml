@@ -1,0 +1,187 @@
+---
+- name: Preparando ambiente
+  hosts: localhost
+  connection: local
+  become: true
+  tasks:
+    - name: Adicionando Chave Google Chrome
+      apt_key:
+        url: "https://dl-ssl.google.com/linux/linux_signing_key.pub"
+        keyring: /etc/apt/trusted.gpg.d/google_chrome.gpg
+
+    - name: Adicionando Repositório Google Chrome
+      ansible.builtin.apt_repository:
+        repo: "deb https://dl.google.com/linux/chrome/deb/ stable main"
+        state: present
+        filename: google
+        update_cache: no
+
+#    - name: Instalando Zoom
+#      apt:
+#        deb: https://zoom.us/client/latest/zoom_amd64.deb
+#        autoclean: yes
+#        autoremove: yes
+
+#    - name: Adicionando Repositório Flux
+#      ansible.builtin.apt_repository:
+#        repo: ppa:nathan-renniewaldock/flux 
+
+#    - name: Configurando ambiente gráfico no usuário
+#      ansible.builtin.shell: echo xfce4-session > /home/jairo/.xsession
+
+    - name: Atualizando Pacotes
+      apt:
+        upgrade: full
+        update_cache: yes
+
+    - name: Instalando Softwares via APT
+      apt:
+        name: '{{ item }}'
+        install_recommends: yes
+        state: present
+        update_cache: yes
+      loop:
+          - vim
+          - htop
+#          - unzip
+          - curl
+#          - bc
+#          - wine
+          - wget
+          - tree
+#          - make
+          - git
+#          - gparted
+#          - apt-transport-https
+#          - ca-certificates
+#          - gnupg
+#          - python3-pip
+#          - bash-completion
+#          - gnupg-agent
+#          - terminator
+#          - flameshot
+#          - fonts-hack
+#          - mlocate
+#          - bluetooth
+#          - bluez
+#          - bluez-tools
+#          - rfkill
+          - google-chrome-stable
+#          - filezilla
+#          - krita
+          - ansible
+          - ansible-lint
+          - snapd
+#          - gnome
+#          - gnome-tweak-tool
+#         - task-gnome-desktop
+#         - xfce4
+#         - xfce4-terminal
+#         - xorg
+#          - xserver-xorg-core
+#          - xserver-xorg-input-all
+#         - dbus-x11
+#         - x11-xserver-utils
+#          - ssl-cert 
+          - ssh
+#          - xrdp
+#          - ufw
+#          - fail2ban
+
+#    - name: Configurando ambiente gráfico no usuário
+#      ansible.builtin.copy:
+#        src: xrdp/.xsession
+#        dest: /home/USER/.xsession
+#        owner: jairo
+#        group: jairo
+#        mode: '0755'
+
+#    - name: Configurando ambiente gráfico padrão para todos os usuários
+#      ansible.builtin.copy:
+#        src: xrdp/.xsession
+#        dest: /etc/skel/.xsession
+#        owner: root
+#        group: root
+#        mode: '0644'
+
+#    - name: Habilitando ambiente gráfico para todos usuários
+#      ansible.builtin.replace:
+#        path: /etc/X11/Xwrapper.config
+#        regexp: 'allowed_users=console'
+#        replace: 'allowed_users=anybody'
+
+#    - name: Adicionando usuário 'xrdp' ao grupo 'ssl-cert'
+#      user:
+#        name: 'xrdp'
+#        groups: 'ssl-cert'
+
+#    - name: Adicionando usuário 'jairo' ao grupo 'sudo'
+#      user:
+#        name: 'USER'
+#        groups: sudo
+#        append: yes
+
+#    - name: Habilitando SSH na Inicialização
+#      service:
+#        name: ssh
+#        enabled: yes
+
+#    - name: Habilitando XRDP na Inicialização
+#      service:
+#        name: xrdp
+#        enabled: yes
+
+#    - name: Habilitando UFW na Inicialização
+#      service:
+#        name: ufw
+#        enabled: yes
+
+#    - name: Liberar acesso as portas do Firewall
+#      community.general.ufw:
+#        rule: allow
+#        port: '{{ item }}'
+#        src: 192.168.0.0/24
+#        proto: tcp
+#        state: enabled
+#        log: yes
+#      loop:
+#          - '22'
+#          - '3389'
+
+    - name: Instalando Softwares via Snap
+      snap:
+        name: '{{ item }}'
+        classic: yes
+      loop:
+#        - core
+#        - snap-store
+#        - phpstorm
+#        - code
+#        - mysql-workbench-community
+#        - robo3t-snap
+#        - postman
+#        - insomnia
+#        - gitkraken
+#        - remmina
+        - notion-snap
+#        - evernote-web-client
+#        - onlyoffice-desktopeditors
+#        - brave
+#        - opera
+#        - slack
+#        - telegram-desktop
+        - discord
+#        - teams-insiders
+#        - zoom-client
+#        - obs-studio
+#        - audacity
+#        - youtube-dl
+        - vlc
+        - spotify
+#        - google-play-music-desktop-player
+#        - plexmediaserver
+#        - sc-controller
+#        - retroarch
+#        - supertux
+#       - kbreakout
+#      - antstream-arcade
