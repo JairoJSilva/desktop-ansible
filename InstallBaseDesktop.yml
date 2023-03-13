@@ -9,12 +9,12 @@
         url: "https://dl-ssl.google.com/linux/linux_signing_key.pub"
         keyring: /etc/apt/trusted.gpg.d/google_chrome.gpg
 
-    - name: Adicionando Repositório Google Chrome
-      ansible.builtin.apt_repository:
-        repo: "deb https://dl.google.com/linux/chrome/deb/ stable main"
-        state: present
-        filename: google
-        update_cache: no
+#    - name: Adicionando Repositório Google Chrome
+#      ansible.builtin.apt_repository:
+#        repo: "deb https://dl.google.com/linux/chrome/deb/ stable main"
+#        state: present
+#        filename: google
+#        update_cache: no
 
 #    - name: Instalando Zoom
 #      apt:
@@ -62,9 +62,9 @@
 #          - flameshot
 #          - fonts-hack
 #          - mlocate
-#          - bluetooth
-#          - bluez
-#          - bluez-tools
+          - bluetooth
+          - bluez
+          - bluez-tools
 #          - rfkill
           - google-chrome-stable
 #          - filezilla
