@@ -6,15 +6,15 @@
   tasks:
     - name: Adicionando Chave Google Chrome
       apt_key:
-        url: "https://dl-ssl.google.com/linux/linux_signing_key.pub"
+        url: "https://dl.google.com/linux/linux_signing_key.pub"
         keyring: /etc/apt/trusted.gpg.d/google_chrome.gpg
 
-#    - name: Adicionando Repositório Google Chrome
-#      ansible.builtin.apt_repository:
-#        repo: "deb https://dl.google.com/linux/chrome/deb/ stable main"
-#        state: present
-#        filename: google
-#        update_cache: no
+    - name: Adicionando Repositório Google Chrome
+      ansible.builtin.apt_repository:
+        repo: "deb http://dl.google.com/linux/chrome/deb/  stable main"
+        state: present
+        filename: google
+        update_cache: no
 
 #    - name: Instalando Zoom
 #      apt:
@@ -55,10 +55,10 @@
 #          - apt-transport-https
 #          - ca-certificates
 #          - gnupg
-#          - python3-pip
+          - python3-pip
 #          - bash-completion
 #          - gnupg-agent
-#          - terminator
+          - terminator
 #          - flameshot
 #          - fonts-hack
 #          - mlocate
@@ -162,7 +162,7 @@
 #        - postman
 #        - insomnia
 #        - gitkraken
-#        - remmina
+        - remmina
         - notion-snap
 #        - evernote-web-client
 #        - onlyoffice-desktopeditors
