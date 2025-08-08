@@ -4,30 +4,33 @@
   connection: local
   become: true
   tasks:
-    - name: Adicionando Chave Google Chrome
-      apt_key:
-        url: "https://dl.google.com/linux/linux_signing_key.pub"
-        keyring: /etc/apt/trusted.gpg.d/google_chrome.gpg
+### Start google
+- name: Instalar Google Chrome no Linux Mint
+  hosts: all
+  become: yes  # Executa as tarefas com privilégios de superusuário (sudo)
 
-    - name: Adicionando Repositório Google Chrome
-      ansible.builtin.apt_repository:
-        repo: "deb http://dl.google.com/linux/chrome/deb/  stable main"
+  tasks:
+    - name: Baixar o pacote .deb do Google Chrome
+      ansible.builtin.get_url:
+        url: https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+        dest: /home/jairo/google-chrome-stable_current_amd64.deb
+        mode: '0644'
+
+    - name: Instalar o pacote .deb do Google Chrome
+      ansible.builtin.apt:
+        deb: /tmp/google-chrome-stable_current_amd64.deb
         state: present
-        filename: google
-        update_cache: no
+        update_cache: yes
+      notify:
+        - Remover arquivo .deb temporário
 
-#    - name: Instalando Zoom
-#      apt:
-#        deb: https://zoom.us/client/latest/zoom_amd64.deb
-#        autoclean: yes
-#        autoremove: yes
+  handlers:
+    - name: Remover arquivo .deb temporário
+      ansible.builtin.file:
+        path: /home/jairo/google-chrome-stable_current_amd64.deb
+        state: absent
+## End Google
 
-#    - name: Adicionando Repositório Flux
-#      ansible.builtin.apt_repository:
-#        repo: ppa:nathan-renniewaldock/flux 
-
-#    - name: Configurando ambiente gráfico no usuário
-#      ansible.builtin.shell: echo xfce4-session > /home/jairo/.xsession
 
     - name: Atualizando Pacotes
       apt:
