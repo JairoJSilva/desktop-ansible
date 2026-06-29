@@ -89,6 +89,72 @@
 #          - '22'
 #          - '3389'
 
+###  Instalação e configuração do Kind e Docker # DevOps.
+
+- name: Adicionar chave GPG do Kubernetes
+  ansible.builtin.get_url:
+    url: https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key
+    dest: /tmp/kubernetes-release.key
+    mode: '0644'
+
+
+- name: Adicionar repositório Kubernetes
+  ansible.builtin.apt_repository:
+    repo: "deb [signed-by=/tmp/kubernetes-release.key] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /"
+    state: present
+    filename: kubernetes
+
+
+- name: Atualizar cache APT após adicionar Kubernetes repo
+  ansible.builtin.apt:
+    update_cache: yes
+
+
+- name: Instalar kubectl e Docker
+  ansible.builtin.apt:
+    name:
+      - kubectl
+      - docker.io
+    state: present
+    update_cache: yes
+
+
+- name: Garantir serviço Docker ativo
+  ansible.builtin.service:
+    name: docker
+    state: started
+    enabled: yes
+
+
+- name: Baixar kind
+  ansible.builtin.get_url:
+    url: https://kind.sigs.k8s.io/dl/v0.23.0/kind-linux-amd64
+    dest: /usr/local/bin/kind
+    mode: '0755'
+
+
+- name: Validar instalação do kubectl
+  ansible.builtin.command:
+    cmd: kubectl version --client
+  register: kubectl_version
+  changed_when: false
+
+
+- name: Mostrar versão do kubectl
+  ansible.builtin.debug:
+    msg: "{{ kubectl_version.stdout }}"
+
+
+- name: Validar instalação do kind
+  ansible.builtin.command:
+    cmd: kind version
+  register: kind_version
+  changed_when: false
+
+
+- name: Mostrar versão do kind
+  ansible.builtin.debug:
+    msg: "{{ kind_version.stdout }}"
 
 
     - name: Instalando Softwares via Snap
