@@ -1,13 +1,9 @@
 ---
 
 - name: Preparando ambiente
-
   hosts: localhost
-
   connection: local
-
   become: true
-
   tasks:
 
 ### Start google
@@ -44,23 +40,14 @@
     - name: Atualizando Pacotes
 
       apt:
-
         upgrade: full
-
         update_cache: yes
 
-
-
     - name: Instalando Softwares via APT
-
       apt:
-
         name: '{{ item }}'
-
         install_recommends: yes
-
         state: present
-
         update_cache: yes
 
       loop:
@@ -79,16 +66,10 @@
 
 
 #    - name: Adicionando usuário 'jairo' ao grupo 'sudo'
-
 #      user:
-
 #        name: 'USER'
-
 #        groups: sudo
-
 #        append: yes
-
-
 
 #    - name: Habilitando UFW na Inicialização
 #      service:
@@ -111,11 +92,8 @@
 
 
     - name: Instalando Softwares via Snap
-
       snap:
-
         name: '{{ item }}'
-
         classic: yes
 
       loop:
