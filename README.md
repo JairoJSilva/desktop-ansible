@@ -45,3 +45,11 @@ Instalação do Ansible:
 sudo apt update
 
 sudo apt install ansible -y
+
+
+Execução do playbook:
+
+```bash
+
+ansible-playbook  desktop.yml
+
