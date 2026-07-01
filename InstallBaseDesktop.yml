@@ -1,172 +1,236 @@
 ---
-- name: Preparando ambiente DevOps Linux Mint
+- name: Preparando ambiente Desktop DevOps
   hosts: localhost
   connection: local
   become: true
 
   tasks:
 
-  # =========================
-  # Google Chrome
-  # =========================
 
-  - name: Baixar pacote Google Chrome
-    ansible.builtin.get_url:
-      url: https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-      dest: /tmp/google-chrome-stable_current_amd64.deb
-      mode: '0644'
+    # =========================
+    # Atualização do sistema
+    # =========================
 
-
-  - name: Instalar Google Chrome
-    ansible.builtin.apt:
-      deb: /tmp/google-chrome-stable_current_amd64.deb
-      state: present
-
-
-  - name: Remover pacote temporário Chrome
-    ansible.builtin.file:
-      path: /tmp/google-chrome-stable_current_amd64.deb
-      state: absent
+    - name: Atualizando pacotes
+      ansible.builtin.apt:
+        upgrade: full
+        update_cache: yes
 
 
 
-  # =========================
-  # Pacotes APT
-  # =========================
+    # =========================
+    # Liberar Snap no Linux Mint
+    # =========================
 
-  - name: Atualizando pacotes
-    ansible.builtin.apt:
-      upgrade: full
-      update_cache: yes
+    - name: Remover bloqueio do snap no Linux Mint
+      ansible.builtin.file:
+        path: /etc/apt/preferences.d/nosnap.pref
+        state: absent
 
 
-  - name: Instalando softwares via APT
-    ansible.builtin.apt:
-      name:
-        - vim
-        - htop
-        - curl
-        - wget
-        - tree
-        - git
-        - python3-pip
-        - terminator
-        - docker.io
-      state: present
-      install_recommends: yes
+    - name: Atualizar cache APT após liberar Snap
+      ansible.builtin.apt:
+        update_cache: yes
 
 
 
-  # =========================
-  # Kubernetes / kubectl
-  # =========================
+    # =========================
+    # Pacotes básicos
+    # =========================
 
-
-  - name: Criar diretório de chave Kubernetes
-    ansible.builtin.file:
-      path: /etc/apt/keyrings
-      state: directory
-      mode: '0755'
-
-
-  - name: Baixar chave GPG Kubernetes
-    ansible.builtin.get_url:
-      url: https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key
-      dest: /etc/apt/keyrings/kubernetes.asc
-      mode: '0644'
-
-
-  - name: Adicionar repositório Kubernetes
-    ansible.builtin.apt_repository:
-      repo: "deb [signed-by=/etc/apt/keyrings/kubernetes.asc] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /"
-      state: present
-      filename: kubernetes
-
-
-  - name: Atualizar cache APT Kubernetes
-    ansible.builtin.apt:
-      update_cache: yes
-
-
-  - name: Instalar kubectl
-    ansible.builtin.apt:
-      name:
-        - kubectl
-      state: present
+    - name: Instalando softwares via APT
+      ansible.builtin.apt:
+        name:
+          - vim
+          - snapd
+          - htop
+          - curl
+          - wget
+          - tree
+          - git
+          - python3-pip
+          - terminator
+          - ca-certificates
+          - gnupg
+        state: present
+        install_recommends: yes
+        update_cache: yes
 
 
 
-  # =========================
-  # Docker
-  # =========================
+    # =========================
+    # Google Chrome
+    # =========================
+
+    - name: Baixar pacote Google Chrome
+      ansible.builtin.get_url:
+        url: https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+        dest: /tmp/google-chrome-stable_current_amd64.deb
+        mode: '0644'
 
 
-  - name: Habilitar Docker
-    ansible.builtin.service:
-      name: docker
-      state: started
-      enabled: yes
+    - name: Instalar Google Chrome
+      ansible.builtin.apt:
+        deb: /tmp/google-chrome-stable_current_amd64.deb
+        state: present
 
 
-
-  # =========================
-  # KIND
-  # =========================
-
-
-  - name: Instalar Kind
-    ansible.builtin.get_url:
-      url: https://kind.sigs.k8s.io/dl/v0.23.0/kind-linux-amd64
-      dest: /usr/local/bin/kind
-      mode: '0755'
-
-
-
-  # =========================
-  # Validação
-  # =========================
-
-
-  - name: Validar kubectl
-    ansible.builtin.command:
-      cmd: kubectl version --client
-    register: kubectl_version
-    changed_when: false
-
-
-  - name: Mostrar kubectl
-    ansible.builtin.debug:
-      msg: "{{ kubectl_version.stdout }}"
-
-
-  - name: Validar kind
-    ansible.builtin.command:
-      cmd: kind version
-    register: kind_version
-    changed_when: false
-
-
-  - name: Mostrar kind
-    ansible.builtin.debug:
-      msg: "{{ kind_version.stdout }}"
+    - name: Remover pacote temporário Chrome
+      ansible.builtin.file:
+        path: /tmp/google-chrome-stable_current_amd64.deb
+        state: absent
 
 
 
-  # =========================
-  # Snap
-  # =========================
+    # =========================
+    # Kubernetes / kubectl
+    # =========================
+
+    - name: Criar diretório keyrings Kubernetes
+      ansible.builtin.file:
+        path: /etc/apt/keyrings
+        state: directory
+        mode: '0755'
 
 
-  - name: Instalando softwares via Snap
-    community.general.snap:
-      name: "{{ item }}"
-      classic: yes
+    - name: Baixar chave GPG Kubernetes
+      ansible.builtin.get_url:
+        url: https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key
+        dest: /etc/apt/keyrings/kubernetes.asc
+        mode: '0644'
 
-    loop:
-      - remmina
-      - notion-snap
-      - telegram-desktop
-      - discord
-      - teams-insiders
-      - vlc
-      - spotify
+
+    - name: Adicionar repositório Kubernetes
+      ansible.builtin.apt_repository:
+        repo: "deb [signed-by=/etc/apt/keyrings/kubernetes.asc] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /"
+        state: present
+        filename: kubernetes
+
+
+    - name: Atualizar cache Kubernetes
+      ansible.builtin.apt:
+        update_cache: yes
+
+
+    - name: Instalar kubectl
+      ansible.builtin.apt:
+        name:
+          - kubectl
+        state: present
+
+
+
+    # =========================
+    # Docker CE Oficial
+    # =========================
+
+    - name: Criar diretório keyrings Docker
+      ansible.builtin.file:
+        path: /etc/apt/keyrings
+        state: directory
+        mode: '0755'
+
+
+    - name: Baixar chave GPG Docker
+      ansible.builtin.get_url:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        dest: /etc/apt/keyrings/docker.asc
+        mode: '0644'
+
+    - name: Atualizar cache Docker
+      ansible.builtin.apt:
+        update_cache: yes
+
+
+    - name: Instalar Docker Engine
+      ansible.builtin.apt:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-buildx-plugin
+          - docker-compose-plugin
+        state: present
+
+
+
+    - name: Habilitar Docker
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: yes
+
+    # =========================
+    # KIND Kubernetes local
+    # =========================
+
+    - name: Instalar Kind
+      ansible.builtin.get_url:
+        url: https://kind.sigs.k8s.io/dl/v0.23.0/kind-linux-amd64
+        dest: /usr/local/bin/kind
+        mode: '0755'
+
+
+
+    # =========================
+    # Snap Apps
+    # =========================
+
+    - name: Habilitar serviço snap
+      ansible.builtin.service:
+        name: snapd
+        state: started
+        enabled: yes
+
+
+    - name: Instalando softwares via Snap
+      community.general.snap:
+        name: "{{ item }}"
+        classic: yes
+      loop:
+        - remmina
+        - telegram-desktop
+        - discord
+        - vlc
+        - spotify
+
+
+
+    # =========================
+    # Validação
+    # =========================
+
+    - name: Validar kubectl
+      ansible.builtin.command:
+        cmd: kubectl version --client
+      register: kubectl_version
+      changed_when: false
+
+
+    - name: Mostrar versão kubectl
+      ansible.builtin.debug:
+        msg: "{{ kubectl_version.stdout }}"
+
+
+    - name: Validar Docker
+      ansible.builtin.command:
+        cmd: docker --version
+      register: docker_version
+      changed_when: false
+
+
+    - name: Mostrar versão Docker
+      ansible.builtin.debug:
+        msg: "{{ docker_version.stdout }}"
+
+
+    - name: Validar Kind
+      ansible.builtin.command:
+        cmd: kind version
+      register: kind_version
+      changed_when: false
+
+
+    - name: Mostrar versão Kind
+      ansible.builtin.debug:
+        msg: "{{ kind_version.stdout }}"
