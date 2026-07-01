@@ -1,4 +1,4 @@
-#  InstallBaseDesktop - Ansible Linux deb
+# InstallBaseDesktop - Ansible Linux deb
 
 Automação da preparação de um ambiente desktop Linux utilizando **Ansible**.
 
@@ -8,7 +8,7 @@ A ideia é transformar uma instalação "limpa" em um ambiente pronto para uso p
 
 ---
 
-##  Objetivo
+## Objetivo
 
 Automatizar:
 
@@ -22,7 +22,7 @@ Automatizar:
 
 ---
 
-#  Tecnologias utilizadas
+# Tecnologias utilizadas
 
 - Ansible
 - Snap
@@ -30,7 +30,7 @@ Automatizar:
 
 ---
 
-#  Requisitos
+# Requisitos
 
 Antes de executar, certifique-se que possui:
 
@@ -41,15 +41,14 @@ Antes de executar, certifique-se que possui:
 
 Instalação do Ansible:
 
-```bash
+```yaml
 sudo apt update
 
 sudo apt install ansible -y
-
+```
 
 Execução do playbook:
 
-```bash
-
-ansible-playbook  desktop.yml
-
+```yaml
+ansible-playbook  InstallBaseDesktop.yml
+```
