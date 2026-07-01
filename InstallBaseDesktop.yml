@@ -7,9 +7,9 @@
   tasks:
 
 
-    # =========================
+  
     # Atualização do sistema
-    # =========================
+  
 
     - name: Atualizando pacotes
       ansible.builtin.apt:
@@ -18,9 +18,9 @@
 
 
 
-    # =========================
+  
     # Liberar Snap no Linux Mint
-    # =========================
+  
 
     - name: Remover bloqueio do snap no Linux Mint
       ansible.builtin.file:
@@ -34,9 +34,9 @@
 
 
 
-    # =========================
+  
     # Pacotes básicos
-    # =========================
+  
 
     - name: Instalando softwares via APT
       ansible.builtin.apt:
@@ -58,9 +58,9 @@
 
 
 
-    # =========================
+  
     # Google Chrome
-    # =========================
+  
 
     - name: Baixar pacote Google Chrome
       ansible.builtin.get_url:
@@ -82,9 +82,9 @@
 
 
 
-    # =========================
+  
     # Kubernetes / kubectl
-    # =========================
+  
 
     - name: Criar diretório keyrings Kubernetes
       ansible.builtin.file:
@@ -120,9 +120,9 @@
 
 
 
-    # =========================
+  
     # Docker CE Oficial
-    # =========================
+  
 
     - name: Criar diretório keyrings Docker
       ansible.builtin.file:
@@ -160,9 +160,9 @@
         state: started
         enabled: yes
 
-    # =========================
+  
     # KIND Kubernetes local
-    # =========================
+  
 
     - name: Instalar Kind
       ansible.builtin.get_url:
@@ -172,9 +172,9 @@
 
 
 
-    # =========================
+  
     # Snap Apps
-    # =========================
+  
 
     - name: Habilitar serviço snap
       ansible.builtin.service:
@@ -196,9 +196,9 @@
 
 
 
-    # =========================
+  
     # Validação
-    # =========================
+  
 
     - name: Validar kubectl
       ansible.builtin.command:
