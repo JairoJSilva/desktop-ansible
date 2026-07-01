@@ -6,38 +6,26 @@
 
   tasks:
 
-
-  
     # Atualização do sistema
   
-
     - name: Atualizando pacotes
       ansible.builtin.apt:
         upgrade: full
         update_cache: yes
 
-
-
-  
     # Liberar Snap no Linux Mint
   
-
     - name: Remover bloqueio do snap no Linux Mint
       ansible.builtin.file:
         path: /etc/apt/preferences.d/nosnap.pref
         state: absent
 
-
     - name: Atualizar cache APT após liberar Snap
       ansible.builtin.apt:
         update_cache: yes
 
-
-
-  
     # Pacotes básicos
   
-
     - name: Instalando softwares via APT
       ansible.builtin.apt:
         name:
@@ -56,9 +44,6 @@
         install_recommends: yes
         update_cache: yes
 
-
-
-  
     # Google Chrome
   
 
@@ -68,30 +53,23 @@
         dest: /tmp/google-chrome-stable_current_amd64.deb
         mode: '0644'
 
-
     - name: Instalar Google Chrome
       ansible.builtin.apt:
         deb: /tmp/google-chrome-stable_current_amd64.deb
         state: present
-
 
     - name: Remover pacote temporário Chrome
       ansible.builtin.file:
         path: /tmp/google-chrome-stable_current_amd64.deb
         state: absent
 
-
-
-  
     # Kubernetes / kubectl
   
-
     - name: Criar diretório keyrings Kubernetes
       ansible.builtin.file:
         path: /etc/apt/keyrings
         state: directory
         mode: '0755'
-
 
     - name: Baixar chave GPG Kubernetes
       ansible.builtin.get_url:
@@ -99,18 +77,15 @@
         dest: /etc/apt/keyrings/kubernetes.asc
         mode: '0644'
 
-
     - name: Adicionar repositório Kubernetes
       ansible.builtin.apt_repository:
         repo: "deb [signed-by=/etc/apt/keyrings/kubernetes.asc] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /"
         state: present
         filename: kubernetes
 
-
     - name: Atualizar cache Kubernetes
       ansible.builtin.apt:
         update_cache: yes
-
 
     - name: Instalar kubectl
       ansible.builtin.apt:
@@ -118,18 +93,13 @@
           - kubectl
         state: present
 
-
-
-  
     # Docker CE Oficial
-  
 
     - name: Criar diretório keyrings Docker
       ansible.builtin.file:
         path: /etc/apt/keyrings
         state: directory
         mode: '0755'
-
 
     - name: Baixar chave GPG Docker
       ansible.builtin.get_url:
@@ -141,7 +111,6 @@
       ansible.builtin.apt:
         update_cache: yes
 
-
     - name: Instalar Docker Engine
       ansible.builtin.apt:
         name:
@@ -152,17 +121,13 @@
           - docker-compose-plugin
         state: present
 
-
-
     - name: Habilitar Docker
       ansible.builtin.service:
         name: docker
         state: started
         enabled: yes
 
-  
     # KIND Kubernetes local
-  
 
     - name: Instalar Kind
       ansible.builtin.get_url:
@@ -170,18 +135,12 @@
         dest: /usr/local/bin/kind
         mode: '0755'
 
-
-
-  
     # Snap Apps
-  
-
     - name: Habilitar serviço snap
       ansible.builtin.service:
         name: snapd
         state: started
         enabled: yes
-
 
     - name: Instalando softwares via Snap
       community.general.snap:
@@ -194,23 +153,17 @@
         - vlc
         - spotify
 
-
-
-  
     # Validação
   
-
     - name: Validar kubectl
       ansible.builtin.command:
         cmd: kubectl version --client
       register: kubectl_version
       changed_when: false
 
-
     - name: Mostrar versão kubectl
       ansible.builtin.debug:
         msg: "{{ kubectl_version.stdout }}"
-
 
     - name: Validar Docker
       ansible.builtin.command:
@@ -218,18 +171,15 @@
       register: docker_version
       changed_when: false
 
-
     - name: Mostrar versão Docker
       ansible.builtin.debug:
         msg: "{{ docker_version.stdout }}"
-
 
     - name: Validar Kind
       ansible.builtin.command:
         cmd: kind version
       register: kind_version
       changed_when: false
-
 
     - name: Mostrar versão Kind
       ansible.builtin.debug:
