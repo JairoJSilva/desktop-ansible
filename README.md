@@ -1,4 +1,4 @@
-# 🚀 InstallBaseDesktop - Ansible Bootstrap Linux
+#  InstallBaseDesktop - Ansible Bootstrap Linux
 
 Automação da preparação de um ambiente desktop Linux utilizando **Ansible**.
 
